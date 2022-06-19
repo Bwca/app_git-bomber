@@ -16,6 +16,10 @@ public class Messenger {
         printLine(Chalk.on(message).bold().red());
     }
 
+    public void warn(String message) {
+        printLine(Chalk.on(message).yellow());
+    }
+
     public void success(String message) {
         printLine(Chalk.on(message).green());
     }

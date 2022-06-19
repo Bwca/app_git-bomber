@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class ConfigLoader {
@@ -18,16 +19,29 @@ public class ConfigLoader {
     public Config loadConfig() throws IOException {
         Repository repository = loadGitRepo();
         messenger.success("Looks good, found the repo");
+
         messenger.info("Current branch is " + repository.getBranch());
+
         String branchToBomb = branchToBomb();
         messenger.info("Alight, we're bombing " + branchToBomb);
+
         Range<LocalDate> days = getDays();
         messenger.success("Bombing range set from " + days.from + " to " + days.to);
+
         Range<Long> commits = getCommitsRange();
         messenger.success("Commits range set from " + commits.from + " to " + commits.to);
+
+        String fileName = getBombFileName();
+
         return new Config(
-                repository, branchToBomb, days, commits
+                repository, branchToBomb, days, commits, fileName
         );
+    }
+
+    private String getBombFileName() {
+        String defaultFileName = "dis-is-da-file-for-da-bombin!";
+        String userEnteredFileName = messenger.prompt("Enter file name for commit bombing, or leave blank for default file name, which is " + defaultFileName);
+        return Optional.ofNullable(userEnteredFileName).orElse(defaultFileName);
     }
 
     private String branchToBomb() {
@@ -58,6 +72,7 @@ public class ConfigLoader {
         while (true) {
             String repoPath = messenger.prompt(promptLine);
             repoPath = repoPath.replaceAll("\\\\", "/");
+
             if (!repoPath.endsWith(".git")) {
                 repoPath = repoPath.endsWith("/") ? repoPath.concat(".git") : repoPath.concat("/.git");
             }
