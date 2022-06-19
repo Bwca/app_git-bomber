@@ -8,7 +8,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.PersonIdent;
 
 import java.io.*;
-import java.sql.Date;
+import java.time.ZoneId;
+import java.util.Date;
 import java.time.LocalDate;
 import java.util.OptionalLong;
 import java.util.Random;
@@ -46,9 +47,11 @@ public class CommitBomber {
     }
 
     private long polluteFileWithRubbish(LocalDate localDate, PersonIdent defaultCommitter, RandomAccessFile writer) throws IOException, GitAPIException {
-        Date date = Date.valueOf(localDate);
+        Date date = java.util.Date.from(localDate.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant());
         PersonIdent committer = new PersonIdent(defaultCommitter, date);
-        String fileContentToWrite = date.toString();
+
 
         OptionalLong randomCommitNumber = new Random().longs(config.commits.from, config.commits.to)
                 .findFirst();
@@ -56,9 +59,12 @@ public class CommitBomber {
 
         messenger.info(numberOfCommitsForTheGivenDate + " commits prepared for the day");
 
+        final Random random = new Random();
+        final int millisInDay = 24 * 60 * 60 * 1000;
         for (long n = 0; n < numberOfCommitsForTheGivenDate; n++) {
+            date.setTime(date.getTime() + (long) random.nextInt(millisInDay));
             writer.seek(0);
-            writer.writeBytes(fileContentToWrite);
+            writer.writeBytes(date.toString());
 
             git.add()
                     .addFilepattern(config.fileName)
