@@ -36,3 +36,10 @@ If something doesn't go right, ~~go fix it yourself and submit a PR~~ open an is
 You can support the app by buying me a coffee :D
 
 [!["Buying me a coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/bwca)
+
+## Plans for future
+* add tests;
+* dockerize maybe? all the kool kids have docker images;
+* better random for number of commits per day;
+* improve message formatting;
+* add non-swearing messages for validation.
