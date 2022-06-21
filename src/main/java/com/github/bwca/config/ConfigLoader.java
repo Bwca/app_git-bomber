@@ -68,7 +68,7 @@ public class ConfigLoader {
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         builder.setMustExist(true);
 
-        String promptLine = "Enter git repo path";
+        String promptLine = "Enter git repo path, absolute path is expected, please no relative mumbo-jumbo";
         while (true) {
             String repoPath = messenger.prompt(promptLine);
             repoPath = repoPath.replaceAll("\\\\", "/");
@@ -81,7 +81,7 @@ public class ConfigLoader {
                         .build();
             } catch (IOException e) {
                 promptLine = null;
-                messenger.error("That's not a valid git repo path, you dumbass, try again.");
+                messenger.error("That's not a valid git repo path, you dumbass, try again. " + "There's no .git in: " + repoPath);
             }
         }
     }

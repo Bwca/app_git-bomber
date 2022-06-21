@@ -21,7 +21,7 @@ public class Messenger {
     }
 
     public void success(String message) {
-        printLine(Chalk.on(message).green());
+        printLine(Chalk.on(message).bold().green());
     }
 
     public String prompt(String message) {
